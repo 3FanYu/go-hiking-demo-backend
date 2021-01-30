@@ -31,8 +31,13 @@ class trailController extends Controller
                         break;
                     case 'difficulty':
                     case 'evaluation':
-                    case 'altitude':
                         $trail->where($criteria, '=', "$value");
+                        break;
+                    case 'altitude1':
+                        $trail->where('altitude','>=',$value);
+                        break;
+                    case 'altitude2':
+                        $trail->where('altitude','<=',$value);
                         break;
                     case 'countie':
                         $trail->whereHas('location.countie',function($q) use($value){
