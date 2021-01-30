@@ -5,7 +5,8 @@ namespace App\Http\Controllers\API;
 use App\Models\trail;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-
+use Facade\FlareClient\Http\Response;
+use Illuminate\Http\Response as HttpResponse;
 
 class trailController extends Controller
 {
@@ -14,9 +15,37 @@ class trailController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $trail = trail::with('location','location.countie')->where('id','>=',1);
+        // 篩選欄位條件
+        if (isset($request->filters)) {
+            $filters = explode(',', $request->filters);
+            $countieFilter='';
+            foreach ($filters as $key => $filter) {
+                //迴圈取得所有filter參數
+                list($criteria, $value) = explode(':', $filter);
+                switch ($criteria) {
+                    case 'title':
+                        $trail->where($criteria, 'like', "%$value%");
+                        break;
+                    case 'difficulty':
+                    case 'evaluation':
+                    case 'altitude':
+                        $trail->where($criteria, '=', "$value");
+                        break;
+                    case 'countie':
+                        $trail->whereHas('location.countie',function($q) use($value){
+                            $q->where('name','like',"%$value%");
+                        });
+                        break;
+                    default:
+                        break;
+                }
+            }
+            $result=$trail->get();
+        }
+        return $result;
     }
 
     /**
@@ -48,7 +77,8 @@ class trailController extends Controller
      */
     public function show($id)
     {
-        $result = trail::with('location')->get(); //查詢id動作
+        $result = trail::with('location','location.countie')->get(); //查詢id動作
+        // $result= $result->where('countie.name','like',"%桃%");
         return $result;
     }
 
