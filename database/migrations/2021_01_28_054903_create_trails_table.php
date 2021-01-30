@@ -16,12 +16,12 @@ class CreateTrailsTable extends Migration
         Schema::create('trails', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->string('location_id');
-            $table->string('distance');
+            $table->integer('location_id');
+            $table->integer('distance');
             $table->string('coverImage');;
-            $table->string('difficulty');
-            $table->string('evaluation');
-            $table->string('altitude');
+            $table->integer('difficulty');
+            $table->integer('evaluation');
+            $table->integer('altitude');
 
         });
     }
