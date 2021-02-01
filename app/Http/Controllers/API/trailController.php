@@ -5,8 +5,6 @@ namespace App\Http\Controllers\API;
 use App\Models\trail;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Facade\FlareClient\Http\Response;
-use Illuminate\Http\Response as HttpResponse;
 
 class trailController extends Controller
 {
@@ -42,6 +40,11 @@ class trailController extends Controller
                     case 'countie':
                         $trail->whereHas('location.countie',function($q) use($value){
                             $q->where('name','like',"%$value%");
+                        });
+                        break;
+                    case 'collection':
+                        $trail->whereHas('collections',function($q) use($value){
+                            $q->where('collection_id',$value);
                         });
                         break;
                     default:
@@ -82,7 +85,7 @@ class trailController extends Controller
      */
     public function show($id)
     {
-        $result = trail::with('location','location.countie')->get(); //查詢id動作
+        $result = trail::with('location','location.countie')->where('id',$id)->get(); //查詢id動作
         // $result= $result->where('countie.name','like',"%桃%");
         return $result;
     }
