@@ -2,7 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\API\CollectionConroller;
+use App\Http\Controllers\API\CollectionController;
 use App\Http\Controllers\API\trailController;
 
 /*
@@ -20,7 +20,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::resource('/collection',CollectionConroller::class);
+Route::resource('/collection',CollectionController::class);
 Route::resource('/trail',trailController::class);
 
 // Route::post('/collection/{id}',[CollectionConroller::class,'show']);
